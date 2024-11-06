@@ -1,0 +1,10 @@
+button {
+  font-size: 32px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid #ffffff;
+}
+
+button:active {
+  border: 3px solid #ffffff;
+}
