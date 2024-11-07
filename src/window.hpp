@@ -1,5 +1,6 @@
 #pragma once
 
+#include "entry.hpp"
 #include "numpad.hpp"
 #include <glibmm/error.h>
 #include <glibmm/refptr.h>
@@ -8,6 +9,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/cssprovider.h>
+#include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/gridview.h>
@@ -32,8 +34,10 @@ protected:
     Gtk::Box m_main_box;
 
     Numpad                         m_numpad;
+    Entry                          m_entry;
     Glib::RefPtr<Gtk::CssProvider> m_css_provider;
 
+    void on_numpad_clicked(const NumpadButton &button);
     void on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,
                               const Glib::Error                         &error);
 };

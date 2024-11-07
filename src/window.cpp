@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include "numpad.hpp"
 #include <giomm/liststore.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/button.h>
@@ -11,13 +12,17 @@
 
 MainWindow::MainWindow(Glib::ustring &&title)
     : m_main_box(Gtk::Orientation::VERTICAL, 8)
-    , m_numpad() {
+    , m_numpad()
+    , m_entry() {
     set_title(title);
     set_resizable(false);
     set_default_size(600, 800);
 
+    m_numpad.signal_clicked.connect(sigc::mem_fun(*this, &MainWindow::on_numpad_clicked));
+
     m_main_box.set_margin(12);
     m_main_box.set_expand();
+    m_main_box.append(m_entry);
     m_main_box.append(m_numpad);
     set_child(m_main_box);
 
@@ -36,6 +41,10 @@ MainWindow::MainWindow(Glib::ustring &&title)
 
 MainWindow::~MainWindow() {
     //
+}
+
+void MainWindow::on_numpad_clicked(const NumpadButton &button) {
+    m_entry.register_numpad(button);
 }
 
 void MainWindow::on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,

@@ -1,5 +1,5 @@
 {
-  description = "A simple GUI calculator.";
+  description = "Simple GUI calculator with GTK4";
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
