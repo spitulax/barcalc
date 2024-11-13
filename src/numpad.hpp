@@ -1,26 +1,9 @@
 #pragma once
 
+#include "symbols.hpp"
 #include <glibmm/ustring.h>
 #include <gtkmm/grid.h>
 #include <sigc++/signal.h>
-
-enum class ButtonKind {
-    NUMBERS,
-    PERIOD,
-    EQUALS,
-    BACKSPACE,
-    CLEAR,
-    LPAREN = 1 << 8,
-    RPAREN,
-    PLUS,
-    MINUS,
-    MULTIPLY,
-    DIVIDE,
-    PERCENT,
-    POWER,
-    SQRT,
-    EMPTY,
-};
 
 struct NumpadButton {
     ButtonKind                         kind;
