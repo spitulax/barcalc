@@ -7,6 +7,7 @@ project(
     'c_std=c18',
     'cpp_std=c++23',
     'warning_level=3',
+    'prefer_static=true',
   ],
 )
 

@@ -6,12 +6,12 @@
 #include <sigc++/signal.h>
 
 struct NumpadButton {
-    ButtonKind                         kind;
-    std::optional<const Glib::ustring> label     = std::nullopt;
-    bool                               bold      = false;
-    const char                        *color     = "#ffffff";
-    int                                width     = 1;
-    std::optional<const Glib::ustring> css_class = std::nullopt;
+    ButtonKind    kind;
+    Glib::ustring label     = "";
+    bool          bold      = false;
+    const char   *color     = "#ffffff";
+    int           width     = 1;
+    Glib::ustring css_class = "";
 };
 
 class Numpad : public Gtk::Grid {
@@ -22,6 +22,6 @@ public:
     using type_signal_clicked = sigc::signal<void(const NumpadButton &)>;
     type_signal_clicked signal_clicked;
 
-protected:
+private:
     void on_numpad_clicked(const NumpadButton &button);
 };

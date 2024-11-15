@@ -1,5 +1,6 @@
 #include "window.hpp"
 #include "numpad.hpp"
+#include "utils.hpp"
 #include <giomm/liststore.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/button.h>
@@ -19,6 +20,7 @@ MainWindow::MainWindow(Glib::ustring &&title)
     set_default_size(600, 800);
 
     m_numpad.signal_clicked.connect(sigc::mem_fun(*this, &MainWindow::on_numpad_clicked));
+    m_entry.signal_eval_time.connect(sigc::mem_fun(*this, &MainWindow::on_eval_time));
 
     m_main_box.set_margin(12);
     m_main_box.set_expand();
@@ -45,6 +47,26 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_numpad_clicked(const NumpadButton &button) {
     m_entry.register_numpad(button);
+}
+
+void MainWindow::on_eval_time(const Glib::ustring &str) {
+    const auto tokens_wrapped = Eval::parse(str);
+    if (!tokens_wrapped) {
+        std::cerr << "Failed to parse string: " << str << "\n";
+        return;
+    }
+    const auto tokens = tokens_wrapped.value();
+
+    const auto rpn_wrapped = Eval::shunting_yard(tokens);
+    if (!rpn_wrapped) {
+        std::cerr << "Failed to run Shunting Yard algorithm to token: ";
+        print_range(tokens, [](const Token &x) {
+            return '"' + x.str + '"';
+        });
+        return;
+    }
+    const auto rpn = rpn_wrapped.value();
+    /*print_range(rpn, &decltype(rpn)::value_type::str);*/
 }
 
 void MainWindow::on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,

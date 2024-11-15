@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entry.hpp"
+#include "eval.hpp"
 #include "numpad.hpp"
 #include <glibmm/error.h>
 #include <glibmm/refptr.h>
@@ -30,7 +31,7 @@ public:
     MainWindow(Glib::ustring &&title);
     virtual ~MainWindow();
 
-protected:
+private:
     Gtk::Box m_main_box;
 
     Numpad                         m_numpad;
@@ -38,6 +39,7 @@ protected:
     Glib::RefPtr<Gtk::CssProvider> m_css_provider;
 
     void on_numpad_clicked(const NumpadButton &button);
+    void on_eval_time(const Glib::ustring &str);
     void on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,
                               const Glib::Error                         &error);
 };

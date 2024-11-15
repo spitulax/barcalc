@@ -50,13 +50,13 @@ Numpad::Numpad() {
             std::ostringstream label_format;
             label_format << "<span color=\"" << button.color << "\"";
             if (button.bold) label_format << " weight=\"1000\"";
-            label_format << ">" << button.label.value() << "</span>";
+            label_format << ">" << button.label << "</span>";
             button_label->set_markup(label_format.str());
 
             auto gtk_button = Gtk::make_managed<Gtk::Button>();
             gtk_button->set_child(*button_label);
             gtk_button->set_expand();
-            if (button.css_class) gtk_button->add_css_class(button.css_class.value());
+            if (button.css_class != "") gtk_button->add_css_class(button.css_class);
             gtk_button->signal_clicked().connect(
                 sigc::bind(sigc::mem_fun(*this, &Numpad::on_numpad_clicked), button), false);
             attach(*gtk_button, int(x), int(y), button.width);

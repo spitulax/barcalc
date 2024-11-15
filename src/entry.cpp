@@ -3,6 +3,7 @@
 #include "symbols.hpp"
 #include <cassert>
 #include <cmath>
+#include <glibmm/ustring.h>
 #include <gtkmm/enums.h>
 #include <sys/types.h>
 
@@ -18,12 +19,10 @@ Entry::~Entry() {
 }
 
 void Entry::register_numpad(const NumpadButton &button) {
-    set_position(-1);
-
     auto buf = get_buffer();
     switch (button.kind) {
         case ButtonKind::NUMBERS: {
-            insert_text(button.label.value());
+            insert_text(button.label);
         } break;
         case ButtonKind::PERIOD: {
             insert_text(".");
@@ -35,15 +34,23 @@ void Entry::register_numpad(const NumpadButton &button) {
             buf->set_text("");
         } break;
         case ButtonKind::EQUALS: {
-            assert(false && "unimplemented");
+            on_eval_time(buf->get_text());
         } break;
         default: {
-            insert_text(symbols_str.at(Symbols(button.kind)));
+            Glib::ustring str;
+            str += symbols_str.at(Symbols(button.kind));
+            insert_text(std::move(str));
         };
     }
+
+    set_position(-1);
 }
 
 void Entry::insert_text(const Glib::ustring &text) {
     auto buf = get_buffer();
     buf->insert_text(buf->get_length(), text);
+}
+
+void Entry::on_eval_time(const Glib::ustring &str) {
+    signal_eval_time.emit(str);
 }
