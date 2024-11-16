@@ -75,7 +75,7 @@ void MainWindow::on_eval_time(const Glib::ustring &str) {
         return;
     }
     const auto rpn = rpn_wrapped.value();
-    /*print_range(rpn, &decltype(rpn)::value_type::str);*/
+    print_range(rpn, &decltype(rpn)::value_type::str);
 }
 
 void MainWindow::on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,

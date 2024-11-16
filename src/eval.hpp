@@ -68,4 +68,5 @@ public:
 
     static std::optional<std::vector<Token>> parse(const Glib::ustring &str);
     static std::optional<std::deque<Token>>  shunting_yard(const std::vector<Token> &tokens);
+    static double                            solve(std::deque<Token> rpn);
 };

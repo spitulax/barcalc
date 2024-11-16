@@ -1,6 +1,5 @@
 #include "eval.hpp"
 #include "symbols.hpp"
-#include "utils.hpp"
 #include <cassert>
 #include <cctype>
 #include <climits>
@@ -180,25 +179,26 @@ std::optional<std::deque<Token>> Eval::shunting_yard(const std::vector<Token> &t
                     arg         = it->second;
                 }
 
-                if (maybe_unary && maybe_binary) {
+                if (maybe_unary) {
                     bool cond;
+                    bool prev_numeric = prev_token.type == TokenType::NUMERIC ||
+                                        (prev_token.type == TokenType::OPERATOR &&
+                                         prev_token.op.arg == OperatorArg::UNARY_SUFFIX);
+                    bool prev_rparen = prev_token.type == TokenType::RPAREN;
                     if (arg == OperatorArg::UNARY_PREFIX) {
-                        cond = (prev_token.type != TokenType::NUMERIC &&
-                                prev_token.type != TokenType::RPAREN) ||
-                               i == 0;
+                        cond = !(prev_numeric || prev_rparen) || i == 0;
                     } else if (arg == OperatorArg::UNARY_SUFFIX) {
-                        cond = prev_token.type == TokenType::NUMERIC ||
-                               prev_token.type == TokenType::RPAREN;
+                        cond = prev_numeric || prev_rparen;
                     } else {
-                        std::cerr << "Unknown unary operator\n";
+                        std::cerr << "Unknown unary operator: " << token.str << "\n";
                         return std::nullopt;
                     }
-                    maybe_binary = !cond;
-                    maybe_unary  = cond;
+                    if (maybe_binary) maybe_binary = !cond;
+                    maybe_unary = cond;
                 }
 
                 if (!(maybe_unary || maybe_binary)) {
-                    std::cerr << "Operator unrecongnised by solver\n";
+                    std::cerr << "Incorrectly positioned operator: " << token.str << "\n";
                     return std::nullopt;
                 } else if (maybe_unary) {
                     op.arg = arg;
@@ -250,4 +250,8 @@ std::optional<std::deque<Token>> Eval::shunting_yard(const std::vector<Token> &t
     }
 
     return output_stack;
+}
+
+double Eval::solve(std::deque<Token> rpn) {
+    return 0.0;
 }
