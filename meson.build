@@ -18,17 +18,21 @@ cxx = meson.get_compiler('cpp')
 
 if get_option('buildtype').startswith('debug')
   add_project_arguments(['-Og', '-DDEBUG'], language: ['c', 'cpp'])
+  add_project_arguments('-DRESOURCES_DIR="' + join_paths(meson.source_root(), 'resources') + '"', language: ['c', 'cpp'])
 endif
 
 add_project_arguments('-DPROG_NAME="' + meson.project_name() + '"', language: ['c', 'cpp'])
 add_project_arguments('-DPROG_VERSION="' + meson.project_version() + '"', language: ['c', 'cpp'])
 add_project_arguments('-DAPP_NAME="' + app_name + '"', language: ['c', 'cpp'])
 add_project_arguments('-DAPP_ID="' + app_id + '"', language: ['c', 'cpp'])
-add_project_arguments('-DRESOURCES_DIR="' + join_paths(meson.source_root(), 'resources') + '"', language: ['c', 'cpp'])
 add_project_arguments(['-Wconversion', '-Wsign-conversion', '-Wpedantic'], language: ['c', 'cpp'])
 add_project_arguments(['-Wshadow', '-Wnon-virtual-dtor'], language: 'cpp')
 
+src = []
 subdir('src')
+if get_option('buildtype') == 'release'
+  subdir('resources')
+endif
 
 include = [
   'src',

@@ -1,4 +1,4 @@
-src = files(
+src += files(
   'entry.cpp',
   'eval.cpp',
   'main.cpp',

@@ -9,6 +9,7 @@
 , cairomm
 , pangomm
 , gtkmm4
+, unixtools
 
 , debug ? false
 }:
@@ -37,6 +38,7 @@ stdenv.mkDerivation {
     glibmm
     cairomm
     pangomm
+    unixtools.xxd
   ];
 
   buildInputs = [

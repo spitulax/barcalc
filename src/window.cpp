@@ -11,6 +11,9 @@
 #include <iostream>
 #include <sigc++/functors/mem_fun.h>
 
+extern unsigned char ___resources_style_css[];
+extern unsigned int  ___resources_style_css_len;
+
 MainWindow::MainWindow(Glib::ustring &&title)
     : m_main_box(Gtk::Orientation::VERTICAL, 8)
     , m_numpad()
@@ -38,7 +41,13 @@ MainWindow::MainWindow(Glib::ustring &&title)
 #endif
     m_css_provider->signal_parsing_error().connect(
         sigc::mem_fun(*this, &MainWindow::on_css_parsing_error));
+
+#ifdef DEBUG
     m_css_provider->load_from_path(RESOURCES_DIR "/style.css");
+#else
+    m_css_provider->load_from_string(
+        std::string(reinterpret_cast<char *>(___resources_style_css), ___resources_style_css_len));
+#endif
 };
 
 MainWindow::~MainWindow() {
