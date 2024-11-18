@@ -16,17 +16,18 @@ app_id = 'dev.spitulax.' + app_name
 cc = meson.get_compiler('c')
 cxx = meson.get_compiler('cpp')
 
-if get_option('buildtype').startswith('debug')
-  add_project_arguments(['-Og', '-DDEBUG'], language: ['c', 'cpp'])
-  add_project_arguments('-DRESOURCES_DIR="' + meson.source_root() / 'resources' + '"', language: ['c', 'cpp'])
-endif
+cpp_args = []
 
-add_project_arguments('-DPROG_NAME="' + meson.project_name() + '"', language: ['c', 'cpp'])
-add_project_arguments('-DPROG_VERSION="' + meson.project_version() + '"', language: ['c', 'cpp'])
-add_project_arguments('-DAPP_NAME="' + app_name + '"', language: ['c', 'cpp'])
-add_project_arguments('-DAPP_ID="' + app_id + '"', language: ['c', 'cpp'])
-add_project_arguments(['-Wconversion', '-Wsign-conversion', '-Wpedantic'], language: ['c', 'cpp'])
-add_project_arguments(['-Wshadow', '-Wnon-virtual-dtor'], language: 'cpp')
+if get_option('buildtype').startswith('debug')
+  cpp_args += ['-Og', '-DDEBUG']
+  cpp_args += '-DRESOURCES_DIR="' + meson.project_source_root() / 'resources' + '"'
+endif
+cpp_args += '-DPROG_NAME="' + meson.project_name() + '"'
+cpp_args += '-DPROG_VERSION="' + meson.project_version() + '"'
+cpp_args += '-DAPP_NAME="' + app_name + '"'
+cpp_args += '-DAPP_ID="' + app_id + '"'
+cpp_args += ['-Wconversion', '-Wsign-conversion', '-Wpedantic']
+cpp_args += ['-Wshadow', '-Wnon-virtual-dtor']
 
 src = []
 subdir('src')
@@ -48,4 +49,5 @@ executable(
   dependencies : deps,
   include_directories : include,
   install : true,
+  cpp_args : cpp_args,
 )

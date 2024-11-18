@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cctype>
 #include <climits>
+#include <cmath>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
@@ -134,7 +135,7 @@ std::optional<std::deque<Token>> Eval::shunting_yard(const std::vector<Token> &t
 
     Token prev_token = { TokenType::NUMERIC };
 
-    int i = 0;
+    size_t i = 0;
     for (const auto &token : tokens) {
         switch (token.type) {
             case TokenType::NUMERIC: {
@@ -252,6 +253,96 @@ std::optional<std::deque<Token>> Eval::shunting_yard(const std::vector<Token> &t
     return output_stack;
 }
 
-double Eval::solve(std::deque<Token> rpn) {
-    return 0.0;
+std::optional<double> Eval::solve(std::deque<Token> rpn) {
+    std::deque<double> solve_stack;
+
+    for (const auto &token : rpn) {
+        switch (token.type) {
+            case TokenType::NUMERIC: {
+                solve_stack.push_front(token.value);
+            } break;
+            case TokenType::OPERATOR: {
+                const auto &op     = token.op;
+                double      result = 0.0;
+                switch (op.arg) {
+                    case OperatorArg::BINARY: {
+                        std::vector<double> args(2);
+                        for (size_t j = 0; j < 2; ++j) {
+                            if (solve_stack.empty()) {
+                                std::cerr << "Expression is malformed\n";
+                                return std::nullopt;
+                            } else {
+                                args[j] = solve_stack[0];
+                                solve_stack.pop_front();
+                            }
+                        }
+                        switch (op.type) {
+                            case Operators::ADD: {
+                                result = args[1] + args[0];
+                            } break;
+                            case Operators::SUB: {
+                                result = args[1] - args[0];
+                            } break;
+                            case Operators::MUL: {
+                                result = args[1] * args[0];
+                            } break;
+                            case Operators::DIV: {
+                                result = args[1] / args[0];
+                            } break;
+                            case Operators::POWER: {
+                                result = std::pow(args[1], args[0]);
+                            } break;
+                            default: {
+                                std::cerr << "Unhandled binary operator: " << token.str << "\n";
+                                return std::nullopt;
+                            };
+                        }
+                    } break;
+                    case OperatorArg::UNARY_PREFIX:
+                    case OperatorArg::UNARY_SUFFIX: {
+                        double arg = 0.0;
+                        if (solve_stack.empty()) {
+                            std::cerr << "Expression is malformed\n";
+                            return std::nullopt;
+                        } else {
+                            arg = solve_stack[0];
+                            solve_stack.pop_front();
+                        }
+                        switch (op.type) {
+                            case Operators::ADD: {
+                                result = +arg;
+                            } break;
+                            case Operators::SUB: {
+                                result = -arg;
+                            } break;
+                            case Operators::SQRT: {
+                                result = std::sqrt(arg);
+                            } break;
+                            case Operators::PERCENT: {
+                                result = arg / 100;
+                            } break;
+                            default: {
+                                std::cerr << "Unhandled unary operator: " << token.str << "\n";
+                                return std::nullopt;
+                            };
+                        };
+                    } break;
+                    case OperatorArg::UNKNOWN: {
+                        std::cerr << "Unknown operator: " << token.str << "\n";
+                        return std::nullopt;
+                    } break;
+                }
+                solve_stack.push_front(result);
+            } break;
+            default: {
+                std::cerr << "Unexpected token: " << token.str << "\n";
+                return std::nullopt;
+            };
+        }
+    }
+
+    if (solve_stack.empty())
+        return 0;
+    else
+        return solve_stack.front();
 }

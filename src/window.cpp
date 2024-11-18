@@ -76,6 +76,15 @@ void MainWindow::on_eval_time(const Glib::ustring &str) {
     }
     const auto rpn = rpn_wrapped.value();
     print_range(rpn, &decltype(rpn)::value_type::str);
+
+    const auto result_wrapped = Eval::solve(rpn);
+    if (!result_wrapped) {
+        std::cerr << "Failed to solve expression\n";
+        return;
+    }
+    const double result = result_wrapped.value();
+
+    std::cout << "Result: " << result << "\n";
 }
 
 void MainWindow::on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,

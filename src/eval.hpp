@@ -58,8 +58,8 @@ private:
     static const inline std::unordered_map<Operators, OperatorArg> unary_operators{
         { Operators::ADD,     OperatorArg::UNARY_PREFIX },
         { Operators::SUB,     OperatorArg::UNARY_PREFIX },
-        { Operators::PERCENT, OperatorArg::UNARY_SUFFIX },
         { Operators::SQRT,    OperatorArg::UNARY_PREFIX },
+        { Operators::PERCENT, OperatorArg::UNARY_SUFFIX },
     };
 
 public:
@@ -68,5 +68,5 @@ public:
 
     static std::optional<std::vector<Token>> parse(const Glib::ustring &str);
     static std::optional<std::deque<Token>>  shunting_yard(const std::vector<Token> &tokens);
-    static double                            solve(std::deque<Token> rpn);
+    static std::optional<double>             solve(std::deque<Token> rpn);
 };
