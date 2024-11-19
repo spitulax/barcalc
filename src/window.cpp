@@ -24,7 +24,7 @@ MainWindow::MainWindow(Glib::ustring &&title)
     , m_entry() {
     set_title(title);
     set_resizable(false);
-    set_default_size(600, 800);
+    set_default_size(600, 900);
 
     m_entry.set_text("Enter an expression");
 
@@ -42,10 +42,10 @@ MainWindow::MainWindow(Glib::ustring &&title)
     m_css_provider = Gtk::CssProvider::create();
 #if HAS_STYLE_PROVIDER_ADD_PROVIDER_FOR_DISPLAY
     Gtk::StyleProvider::add_provider_for_display(
-        get_display(), m_css_provider, GTK_STYLE_PROVIDER_PRIORITY);
+        get_display(), m_css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
 #else
     Gtk::StyleContext::add_provider_for_display(
-        get_display(), m_css_provider, GTK_STYLE_PROVIDER_PRIORITY);
+        get_display(), m_css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
 #endif
     m_css_provider->signal_parsing_error().connect(
         sigc::mem_fun(*this, &MainWindow::on_css_parsing_error));

@@ -20,12 +20,6 @@
 #include <gtkmm/singleselection.h>
 #include <gtkmm/styleprovider.h>
 
-#ifdef DEBUG
-#define GTK_STYLE_PROVIDER_PRIORITY GTK_STYLE_PROVIDER_PRIORITY_USER
-#else
-#define GTK_STYLE_PROVIDER_PRIORITY GTK_STYLE_PROVIDER_PRIORITY_APPLICATION
-#endif
-
 class MainWindow : public Gtk::ApplicationWindow {
 public:
     MainWindow(Glib::ustring &&title);

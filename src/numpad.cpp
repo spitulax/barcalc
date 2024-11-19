@@ -16,7 +16,7 @@ static const std::array<NumpadButton, numpad_width * numpad_height> numpad_layou
      { ButtonKind::LPAREN, "(", true },
      { ButtonKind::RPAREN, ")", true },
      { ButtonKind::POWER, "xⁿ", true },
-     { ButtonKind::HISTORY, "H", true },
+     { ButtonKind::HISTORY, "H", true, "#75bfff" },
      { ButtonKind::CLEAR, "C", true, "#ee6565", 1, "delete" },
      { ButtonKind::BACKSPACE, "←", true, "#ee6565", 1, "delete" },
      { ButtonKind::SQRT, "√", true },

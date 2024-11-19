@@ -3,7 +3,7 @@ window {
 }
 
 button {
-  font-size: 36px;
+  font-size: 40px;
   padding: 8px;
   margin: 8px;
   border-radius: 1em;
@@ -47,12 +47,10 @@ popover.menu contents {
 popover.menu contents box box * {
   border-radius: 0.5em;
 }
-
 popover.menu contents box box *:hover {
   transition-duration: 0.2s;
   background-color: #3A3A3A;
 }
-
 popover.menu contents box box *:active {
   transition: background-color 0.2s ease;
   background-color: #606060;
