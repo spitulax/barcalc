@@ -5,7 +5,6 @@
 #include <cmath>
 #include <glibmm/ustring.h>
 #include <gtkmm/enums.h>
-#include <sys/types.h>
 
 Entry::Entry() {
     set_editable(false);

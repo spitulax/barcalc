@@ -1,7 +1,6 @@
 #pragma once
 
 #include "entry.hpp"
-#include "eval.hpp"
 #include "numpad.hpp"
 #include <glibmm/error.h>
 #include <glibmm/refptr.h>

@@ -2,7 +2,6 @@
 
 #include <glib.h>
 #include <glibmm/ustring.h>
-#include <sys/types.h>
 #include <unordered_map>
 #include <utility>
 

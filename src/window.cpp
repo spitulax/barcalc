@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include "eval.hpp"
 #include "numpad.hpp"
 #include "utils.hpp"
 #include <cmath>
