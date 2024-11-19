@@ -10,6 +10,8 @@ public:
     Entry();
     virtual ~Entry();
 
+    bool continue_typing = false;
+
     void register_numpad(const NumpadButton &button);
 
     using type_signal_eval_time = sigc::signal<void(const Glib::ustring &str)>;

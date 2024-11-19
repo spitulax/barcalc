@@ -1,6 +1,8 @@
 #include "window.hpp"
 #include "numpad.hpp"
 #include "utils.hpp"
+#include <cmath>
+#include <format>
 #include <giomm/liststore.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/button.h>
@@ -21,6 +23,8 @@ MainWindow::MainWindow(Glib::ustring &&title)
     set_title(title);
     set_resizable(false);
     set_default_size(600, 800);
+
+    m_entry.set_text("Enter an expression");
 
     m_numpad.signal_clicked.connect(sigc::mem_fun(*this, &MainWindow::on_numpad_clicked));
     m_entry.signal_eval_time.connect(sigc::mem_fun(*this, &MainWindow::on_eval_time));
@@ -75,7 +79,6 @@ void MainWindow::on_eval_time(const Glib::ustring &str) {
         return;
     }
     const auto rpn = rpn_wrapped.value();
-    print_range(rpn, &decltype(rpn)::value_type::str);
 
     const auto result_wrapped = Eval::solve(rpn);
     if (!result_wrapped) {
@@ -84,7 +87,21 @@ void MainWindow::on_eval_time(const Glib::ustring &str) {
     }
     const double result = result_wrapped.value();
 
-    std::cout << "Result: " << result << "\n";
+    m_entry.continue_typing = false;
+    std::string result_str;
+    if (std::isnan(result)) {
+        result_str = "NaN";
+    } else if (std::isinf(result)) {
+        result_str = "∞";
+    } else {
+        result_str = std::format("{:f}", result);
+        result_str.erase(result_str.find_last_not_of('0') + 1, std::string::npos);
+        if (result_str.back() == '.') {
+            result_str.pop_back();
+        }
+        m_entry.continue_typing = true;
+    }
+    m_entry.set_text(result_str);
 }
 
 void MainWindow::on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,

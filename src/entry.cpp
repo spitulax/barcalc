@@ -20,6 +20,12 @@ Entry::~Entry() {
 
 void Entry::register_numpad(const NumpadButton &button) {
     auto buf = get_buffer();
+
+    if (!continue_typing) {
+        buf->set_text("");
+        continue_typing = true;
+    }
+
     switch (button.kind) {
         case ButtonKind::NUMBERS: {
             insert_text(button.label);
