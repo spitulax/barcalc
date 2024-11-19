@@ -318,9 +318,6 @@ std::optional<double> Eval::solve(std::deque<Token> rpn) {
                             case Operators::SQRT: {
                                 result = std::sqrt(arg);
                             } break;
-                            case Operators::PERCENT: {
-                                result = arg / 100;
-                            } break;
                             default: {
                                 std::cerr << "Unhandled unary operator: " << token.str << "\n";
                                 return std::nullopt;

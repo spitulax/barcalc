@@ -19,7 +19,8 @@ extern unsigned int  ___resources_style_css_len;
 
 MainWindow::MainWindow(Glib::ustring &&title)
     : m_main_box(Gtk::Orientation::VERTICAL, 8)
-    , m_numpad()
+    , m_history()
+    , m_numpad(m_history)
     , m_entry() {
     set_title(title);
     set_resizable(false);
@@ -27,6 +28,8 @@ MainWindow::MainWindow(Glib::ustring &&title)
 
     m_entry.set_text("Enter an expression");
 
+    m_history.signal_selected_history.connect(
+        sigc::mem_fun(*this, &MainWindow::on_selected_history));
     m_numpad.signal_clicked.connect(sigc::mem_fun(*this, &MainWindow::on_numpad_clicked));
     m_entry.signal_eval_time.connect(sigc::mem_fun(*this, &MainWindow::on_eval_time));
 
@@ -58,6 +61,11 @@ MainWindow::MainWindow(Glib::ustring &&title)
 MainWindow::~MainWindow() {
     //
 }
+
+bool MainWindow::on_close_request() {
+    m_history.serialise_expressions();
+    return Gtk::ApplicationWindow::on_close_request();
+};
 
 void MainWindow::on_numpad_clicked(const NumpadButton &button) {
     m_entry.register_numpad(button);
@@ -103,6 +111,13 @@ void MainWindow::on_eval_time(const Glib::ustring &str) {
         m_entry.continue_typing = true;
     }
     m_entry.set_text(result_str);
+
+    m_history.append_expression(str);
+}
+
+void MainWindow::on_selected_history(const Glib::ustring &expression) {
+    m_entry.set_text(expression);
+    m_entry.continue_typing = true;
 }
 
 void MainWindow::on_css_parsing_error(const Glib::RefPtr<const Gtk::CssSection> &section,

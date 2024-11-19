@@ -56,10 +56,9 @@ private:
     };
 
     static const inline std::unordered_map<Operators, OperatorArg> unary_operators{
-        { Operators::ADD,     OperatorArg::UNARY_PREFIX },
-        { Operators::SUB,     OperatorArg::UNARY_PREFIX },
-        { Operators::SQRT,    OperatorArg::UNARY_PREFIX },
-        { Operators::PERCENT, OperatorArg::UNARY_SUFFIX },
+        { Operators::ADD,  OperatorArg::UNARY_PREFIX },
+        { Operators::SUB,  OperatorArg::UNARY_PREFIX },
+        { Operators::SQRT, OperatorArg::UNARY_PREFIX },
     };
 
 public:

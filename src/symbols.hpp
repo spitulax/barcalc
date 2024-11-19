@@ -13,7 +13,6 @@ enum class Symbols {
     SUB,
     MUL,
     DIV,
-    PERCENT,
     POWER,
     SQRT,
 };
@@ -25,13 +24,13 @@ enum class ButtonKind {
     EQUALS,
     BACKSPACE,
     CLEAR,
+    HISTORY,
     LPAREN = 1 << 8,    // Corresponds to `Symbols`
     RPAREN,
     PLUS,
     MINUS,
     MULTIPLY,
     DIVIDE,
-    PERCENT,
     POWER,
     SQRT,
 };
@@ -42,21 +41,19 @@ enum class Operators {
     SUB,
     MUL,
     DIV,
-    PERCENT,
     POWER,
     SQRT,
 };
 
 static const std::unordered_map<Symbols, char32_t> symbols_str{
-    { Symbols::LPAREN,  U'('   },
-    { Symbols::RPAREN,  U')'   },
-    { Symbols::ADD,     U'+'   },
-    { Symbols::SUB,     U'-'   },
-    { Symbols::MUL,     U'×'  },
-    { Symbols::DIV,     U'÷'  },
-    { Symbols::PERCENT, U'%'   },
-    { Symbols::POWER,   U'^'   },
-    { Symbols::SQRT,    U'√' },
+    { Symbols::LPAREN, U'('   },
+    { Symbols::RPAREN, U')'   },
+    { Symbols::ADD,    U'+'   },
+    { Symbols::SUB,    U'-'   },
+    { Symbols::MUL,    U'×'  },
+    { Symbols::DIV,    U'÷'  },
+    { Symbols::POWER,  U'^'   },
+    { Symbols::SQRT,   U'√' },
 };
 
 static inline std::pair<bool, Symbols> find_symbols_str(char32_t ch) {

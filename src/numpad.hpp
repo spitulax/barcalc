@@ -1,5 +1,6 @@
 #pragma once
 
+#include "history.hpp"
 #include "symbols.hpp"
 #include <glibmm/ustring.h>
 #include <gtkmm/grid.h>
@@ -16,7 +17,7 @@ struct NumpadButton {
 
 class Numpad : public Gtk::Grid {
 public:
-    Numpad();
+    Numpad(History &history);
     virtual ~Numpad();
 
     using type_signal_clicked = sigc::signal<void(const NumpadButton &)>;

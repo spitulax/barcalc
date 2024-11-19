@@ -1,7 +1,11 @@
 #include "numpad.hpp"
+#include "symbols.hpp"
+#include <glibmm/refptr.h>
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/object.h>
+#include <gtkmm/popovermenu.h>
 #include <sstream>
 #include <string>
 
@@ -9,13 +13,13 @@ static constexpr size_t                                             numpad_width
 static constexpr size_t                                             numpad_height = 6;
 static const std::array<NumpadButton, numpad_width * numpad_height> numpad_layout{
     {
-     { ButtonKind::POWER, "xⁿ", true },
-     { ButtonKind::SQRT, "√", true },
      { ButtonKind::LPAREN, "(", true },
      { ButtonKind::RPAREN, ")", true },
+     { ButtonKind::POWER, "xⁿ", true },
+     { ButtonKind::HISTORY, "H", true },
      { ButtonKind::CLEAR, "C", true, "#ee6565", 1, "delete" },
      { ButtonKind::BACKSPACE, "←", true, "#ee6565", 1, "delete" },
-     { ButtonKind::PERCENT, "%", true },
+     { ButtonKind::SQRT, "√", true },
      { ButtonKind::DIVIDE, "÷", true },
      { ButtonKind::NUMBERS, "7" },
      { ButtonKind::NUMBERS, "8" },
@@ -36,7 +40,7 @@ static const std::array<NumpadButton, numpad_width * numpad_height> numpad_layou
      }
 };
 
-Numpad::Numpad() {
+Numpad::Numpad(History &history) {
     set_expand();
 
     for (size_t y = 0; y < numpad_height; ++y) {
@@ -53,12 +57,17 @@ Numpad::Numpad() {
             label_format << ">" << button.label << "</span>";
             button_label->set_markup(label_format.str());
 
-            auto gtk_button = Gtk::make_managed<Gtk::Button>();
+            Gtk::Button *gtk_button;
+            if (button.kind == ButtonKind::HISTORY)
+                gtk_button = history.button();
+            else
+                gtk_button = Gtk::make_managed<Gtk::Button>();
             gtk_button->set_child(*button_label);
             gtk_button->set_expand();
             if (button.css_class != "") gtk_button->add_css_class(button.css_class);
-            gtk_button->signal_clicked().connect(
-                sigc::bind(sigc::mem_fun(*this, &Numpad::on_numpad_clicked), button), false);
+            if (button.kind != ButtonKind::HISTORY)
+                gtk_button->signal_clicked().connect(
+                    sigc::bind(sigc::mem_fun(*this, &Numpad::on_numpad_clicked), button), false);
             attach(*gtk_button, int(x), int(y), button.width);
         }
     }
