@@ -36,6 +36,7 @@ std::optional<std::vector<Token>> Eval::parse(const Glib::ustring &str) {
             case TokeniserState::NEW_TOKEN: {
                 cur_token = { TokenType::UNKNOWN, "" };
                 cur_token_str.clear();
+                found_decimal_mark = false;
 
                 if (std::isdigit(static_cast<unsigned char>(*it))) {
                     cur_token_str = *it;
@@ -338,8 +339,12 @@ std::optional<double> Eval::solve(std::deque<Token> rpn) {
         }
     }
 
-    if (solve_stack.empty())
+    if (solve_stack.empty()) {
         return 0;
-    else
+    } else if (solve_stack.size() > 1) {
+        std::cerr << "Expression is invalid\n";
+        return std::nullopt;
+    } else {
         return solve_stack.front();
+    }
 }
