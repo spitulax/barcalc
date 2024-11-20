@@ -17,6 +17,21 @@ History::History()
     : m_button()
     , m_menu()
     , m_model(Gio::Menu::create()) {
+    m_button.signal_clicked().connect(sigc::mem_fun(*this, &History::on_button_clicked));
+
+    m_model   = Gio::Menu::create();
+    m_actions = Gio::SimpleActionGroup::create();
+    m_actions->add_action_with_parameter(
+        "select", Glib::VariantType("s"), sigc::mem_fun(*this, &History::on_history_selected));
+    m_actions->add_action("clear", sigc::mem_fun(*this, &History::on_history_cleared));
+    m_button.insert_action_group("history", m_actions);
+    m_model->append("CLEAR", "history.clear");
+
+    m_menu.set_has_arrow(false);
+    m_menu.set_offset(0, 16);
+    m_menu.set_menu_model(m_model);
+    m_menu.set_parent(m_button);
+
 #ifdef __unix__
     std::string data_home = std::getenv("XDG_DATA_HOME");
     if (data_home.length() <= 0) {
@@ -27,7 +42,7 @@ History::History()
     m_history_filepath = data_home;
     m_history_filepath /= history_filename;
 #else
-    history_filepath = std::filesystem::path();
+    m_history_filepath = std::filesystem::path();
 #endif
 
     if (m_history_filepath.empty()) return;
@@ -40,23 +55,8 @@ History::History()
     }
 
     deserialise_expressions();
-
-    m_button.signal_clicked().connect(sigc::mem_fun(*this, &History::on_button_clicked));
-
-    m_model   = Gio::Menu::create();
-    m_actions = Gio::SimpleActionGroup::create();
-    m_actions->add_action_with_parameter(
-        "select", Glib::VariantType("s"), sigc::mem_fun(*this, &History::on_history_selected));
-    m_actions->add_action("clear", sigc::mem_fun(*this, &History::on_history_cleared));
-    m_button.insert_action_group("history", m_actions);
-    m_model->append("CLEAR", "history.clear");
     for (const auto &x : m_expressions)
         m_model->append(x, "history.select::" + x);
-
-    m_menu.set_has_arrow(false);
-    m_menu.set_offset(0, 16);
-    m_menu.set_menu_model(m_model);
-    m_menu.set_parent(m_button);
 }
 
 History::~History() {
