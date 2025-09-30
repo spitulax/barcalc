@@ -9,13 +9,13 @@ subtraction, division, power, square root, etc.
 ### Nix (Flake)
 
 ```sh
-$ nix build
-$ ./result/bin/crt --help
+nix build
+./result/bin/barcalc
 ```
 
 ### Other
 
 ```sh
-$ meson setup build && meson compile -C build
-$ ./build/crt --help
+meson setup build && meson compile -C build
+./build/barcalc
 ```
